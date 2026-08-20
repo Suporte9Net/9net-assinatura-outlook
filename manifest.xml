@@ -5,16 +5,16 @@
   xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides"
   xsi:type="MailApp">
   <Id>1b47099e-e39b-4c9f-82df-794fe15d4eaa</Id>
-  <Version>2.0.0.0</Version>
+  <Version>2.0.1.0</Version>
   <ProviderName>9Net Tecnologia</ProviderName>
   <DefaultLocale>pt-BR</DefaultLocale>
   <DisplayName DefaultValue="Assinatura corporativa 9Net"/>
   <Description DefaultValue="Insere a assinatura corporativa da 9Net no Novo Outlook."/>
-  <IconUrl DefaultValue="https://suporte9net.github.io/9net-assinatura-outlook/assets/icon-email.png"/>
-  <HighResolutionIconUrl DefaultValue="https://suporte9net.github.io/9net-assinatura-outlook/assets/icon-email.png"/>
-  <SupportUrl DefaultValue="https://suporte9net.github.io/9net-assinatura-outlook/support.html"/>
+  <IconUrl DefaultValue="https://9net-assinatura-outlook.pages.dev/assets/icon-email.png"/>
+  <HighResolutionIconUrl DefaultValue="https://9net-assinatura-outlook.pages.dev/assets/icon-email.png"/>
+  <SupportUrl DefaultValue="https://9net-assinatura-outlook.pages.dev/support"/>
   <AppDomains>
-    <AppDomain>https://suporte9net.github.io</AppDomain>
+    <AppDomain>https://9net-assinatura-outlook.pages.dev</AppDomain>
     <AppDomain>https://graph.microsoft.com</AppDomain>
     <AppDomain>https://login.microsoftonline.com</AppDomain>
   </AppDomains>
@@ -29,7 +29,7 @@
   <FormSettings>
     <Form xsi:type="ItemRead">
       <DesktopSettings>
-        <SourceLocation DefaultValue="https://suporte9net.github.io/9net-assinatura-outlook/taskpane.html"/>
+        <SourceLocation DefaultValue="https://9net-assinatura-outlook.pages.dev/taskpane"/>
         <RequestedHeight>450</RequestedHeight>
       </DesktopSettings>
     </Form>
@@ -89,14 +89,14 @@
       </Hosts>
       <Resources>
         <bt:Images>
-          <bt:Image id="Icon16" DefaultValue="https://suporte9net.github.io/9net-assinatura-outlook/assets/icon-email.png"/>
-          <bt:Image id="Icon32" DefaultValue="https://suporte9net.github.io/9net-assinatura-outlook/assets/icon-email.png"/>
-          <bt:Image id="Icon80" DefaultValue="https://suporte9net.github.io/9net-assinatura-outlook/assets/icon-email.png"/>
+          <bt:Image id="Icon16" DefaultValue="https://9net-assinatura-outlook.pages.dev/assets/icon-email.png"/>
+          <bt:Image id="Icon32" DefaultValue="https://9net-assinatura-outlook.pages.dev/assets/icon-email.png"/>
+          <bt:Image id="Icon80" DefaultValue="https://9net-assinatura-outlook.pages.dev/assets/icon-email.png"/>
         </bt:Images>
         <bt:Urls>
-          <bt:Url id="TaskpaneUrl" DefaultValue="https://suporte9net.github.io/9net-assinatura-outlook/taskpane.html"/>
-          <bt:Url id="Autorun" DefaultValue="https://suporte9net.github.io/9net-assinatura-outlook/autorun.html"/>
-          <bt:Url id="ClassicRuntimeJs" DefaultValue="https://suporte9net.github.io/9net-assinatura-outlook/classic-skip.js"/>
+          <bt:Url id="TaskpaneUrl" DefaultValue="https://9net-assinatura-outlook.pages.dev/taskpane"/>
+          <bt:Url id="Autorun" DefaultValue="https://9net-assinatura-outlook.pages.dev/autorun"/>
+          <bt:Url id="ClassicRuntimeJs" DefaultValue="https://9net-assinatura-outlook.pages.dev/classic-skip.js"/>
         </bt:Urls>
         <bt:ShortStrings>
           <bt:String id="GroupLabel" DefaultValue="9Net"/>
