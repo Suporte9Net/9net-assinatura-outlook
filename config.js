@@ -2,7 +2,7 @@
   "use strict";
 
   window.NineNetConfig = Object.freeze({
-    version: "2.0.0",
+    version: "2.0.1",
     clientId: "eaaf2251-f42e-4705-861f-66dd100ca29b",
     tenantId: "e66ee0b3-9cf5-40f5-bc5a-a46efc7a8063",
     baseUrl: "https://9net-assinatura-outlook.pages.dev",
