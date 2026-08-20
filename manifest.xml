@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+  xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides"
+  xsi:type="MailApp">
+  <Id>1b47099e-e39b-4c9f-82df-794fe15d4eaa</Id>
+  <Version>2.0.0.0</Version>
+  <ProviderName>9Net Tecnologia</ProviderName>
+  <DefaultLocale>pt-BR</DefaultLocale>
+  <DisplayName DefaultValue="Assinatura corporativa 9Net"/>
+  <Description DefaultValue="Insere a assinatura corporativa da 9Net no Novo Outlook."/>
+  <IconUrl DefaultValue="https://suporte9net.github.io/9net-assinatura-outlook/assets/icon-email.png"/>
+  <HighResolutionIconUrl DefaultValue="https://suporte9net.github.io/9net-assinatura-outlook/assets/icon-email.png"/>
+  <SupportUrl DefaultValue="https://suporte9net.github.io/9net-assinatura-outlook/support.html"/>
+  <AppDomains>
+    <AppDomain>https://suporte9net.github.io</AppDomain>
+    <AppDomain>https://graph.microsoft.com</AppDomain>
+    <AppDomain>https://login.microsoftonline.com</AppDomain>
+  </AppDomains>
+  <Hosts>
+    <Host Name="Mailbox"/>
+  </Hosts>
+  <Requirements>
+    <Sets DefaultMinVersion="1.1">
+      <Set Name="Mailbox"/>
+    </Sets>
+  </Requirements>
+  <FormSettings>
+    <Form xsi:type="ItemRead">
+      <DesktopSettings>
+        <SourceLocation DefaultValue="https://suporte9net.github.io/9net-assinatura-outlook/taskpane.html"/>
+        <RequestedHeight>450</RequestedHeight>
+      </DesktopSettings>
+    </Form>
+  </FormSettings>
+  <Permissions>ReadWriteMailbox</Permissions>
+  <Rule xsi:type="RuleCollection" Mode="Or">
+    <Rule xsi:type="ItemIs" ItemType="Message" FormType="Read"/>
+  </Rule>
+  <DisableEntityHighlighting>true</DisableEntityHighlighting>
+
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
+    <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1" xsi:type="VersionOverridesV1_1">
+      <Description resid="AppDescription"/>
+      <Requirements>
+        <bt:Sets DefaultMinVersion="1.10">
+          <bt:Set Name="Mailbox"/>
+        </bt:Sets>
+      </Requirements>
+      <Hosts>
+        <Host xsi:type="MailHost">
+          <Runtimes>
+            <Runtime resid="Autorun">
+              <Override type="javascript" resid="ClassicRuntimeJs"/>
+            </Runtime>
+          </Runtimes>
+          <DesktopFormFactor>
+            <ExtensionPoint xsi:type="MessageComposeCommandSurface">
+              <OfficeTab id="TabDefault">
+                <Group id="NineNetSignatureGroup">
+                  <Label resid="GroupLabel"/>
+                  <Control xsi:type="Button" id="NineNetSignatureTaskpaneButton">
+                    <Label resid="ButtonLabel"/>
+                    <Supertip>
+                      <Title resid="ButtonLabel"/>
+                      <Description resid="ButtonDescription"/>
+                    </Supertip>
+                    <Icon>
+                      <bt:Image size="16" resid="Icon16"/>
+                      <bt:Image size="32" resid="Icon32"/>
+                      <bt:Image size="80" resid="Icon80"/>
+                    </Icon>
+                    <Action xsi:type="ShowTaskpane">
+                      <SourceLocation resid="TaskpaneUrl"/>
+                    </Action>
+                  </Control>
+                </Group>
+              </OfficeTab>
+            </ExtensionPoint>
+            <ExtensionPoint xsi:type="LaunchEvent">
+              <LaunchEvents>
+                <LaunchEvent Type="OnNewMessageCompose" FunctionName="checkSignature"/>
+              </LaunchEvents>
+              <SourceLocation resid="Autorun"/>
+            </ExtensionPoint>
+          </DesktopFormFactor>
+        </Host>
+      </Hosts>
+      <Resources>
+        <bt:Images>
+          <bt:Image id="Icon16" DefaultValue="https://suporte9net.github.io/9net-assinatura-outlook/assets/icon-email.png"/>
+          <bt:Image id="Icon32" DefaultValue="https://suporte9net.github.io/9net-assinatura-outlook/assets/icon-email.png"/>
+          <bt:Image id="Icon80" DefaultValue="https://suporte9net.github.io/9net-assinatura-outlook/assets/icon-email.png"/>
+        </bt:Images>
+        <bt:Urls>
+          <bt:Url id="TaskpaneUrl" DefaultValue="https://suporte9net.github.io/9net-assinatura-outlook/taskpane.html"/>
+          <bt:Url id="Autorun" DefaultValue="https://suporte9net.github.io/9net-assinatura-outlook/autorun.html"/>
+          <bt:Url id="ClassicRuntimeJs" DefaultValue="https://suporte9net.github.io/9net-assinatura-outlook/classic-skip.js"/>
+        </bt:Urls>
+        <bt:ShortStrings>
+          <bt:String id="GroupLabel" DefaultValue="9Net"/>
+          <bt:String id="ButtonLabel" DefaultValue="Assinatura 9Net"/>
+        </bt:ShortStrings>
+        <bt:LongStrings>
+          <bt:String id="AppDescription" DefaultValue="Assinatura corporativa automatica da 9Net para o Novo Outlook."/>
+          <bt:String id="ButtonDescription" DefaultValue="Testar os dados do Microsoft 365 e aplicar a assinatura nesta mensagem."/>
+        </bt:LongStrings>
+      </Resources>
+    </VersionOverrides>
+  </VersionOverrides>
+</OfficeApp>
