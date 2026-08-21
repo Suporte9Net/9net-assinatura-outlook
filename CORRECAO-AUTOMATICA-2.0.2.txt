@@ -1,0 +1,14 @@
+9Net Assinatura 2.0.2
+
+Arquivos principais alterados:
+- autorun.js
+- signature.js
+- taskpane.js
+- config.js
+- index.html
+- support.html
+- README.md
+
+Primeiro teste: publique os arquivos no Cloudflare Pages mantendo o manifest atual.
+No Entra, confira SPA redirect: brk-multihub://9net-assinatura-outlook.pages.dev
+Depois abra o painel uma vez, clique em Entrar e testar, feche e crie um novo email.

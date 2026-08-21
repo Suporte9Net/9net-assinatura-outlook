@@ -42,7 +42,13 @@
       }
       currentProfile = await NineNetSignature.getGraphProfile(true, NineNetConfig);
       showProfile(currentProfile);
-      setStatus("Dados consultados com sucesso. Confira a pre-visualizacao.", "success");
+      try {
+        await NineNetSignature.saveCachedProfile(currentProfile, NineNetConfig);
+        setStatus("Dados consultados e salvos para aplicacao automatica.", "success");
+      } catch (cacheError) {
+        console.warn("9Net: nao foi possivel salvar o perfil para o modo automatico.", cacheError);
+        setStatus("Dados consultados com sucesso, mas o perfil nao pode ser salvo para o modo automatico.", "error");
+      }
     } catch (error) {
       currentProfile = null;
       setStatus(error && error.message ? error.message : String(error), "error");
@@ -75,8 +81,17 @@
     applyButton.addEventListener("click", applyCurrent);
 
     if (NineNetSignature.isPendingConfig(NineNetConfig)) {
-      setStatus("O administrador ainda precisa executar 01-CONFIGURAR-ENTRA.cmd antes de publicar.", "error");
+      setStatus("A configuracao do Microsoft Entra ainda esta pendente.", "error");
       connectButton.disabled = true;
+      return;
+    }
+
+    var cachedProfile = NineNetSignature.getCachedProfile(NineNetConfig);
+    if (cachedProfile) {
+      currentProfile = cachedProfile;
+      showProfile(currentProfile);
+      applyButton.disabled = false;
+      setStatus("Perfil salvo encontrado. O modo automatico ja pode usa-lo; use Entrar e testar para atualizar os dados.", "success");
     }
   });
 })();

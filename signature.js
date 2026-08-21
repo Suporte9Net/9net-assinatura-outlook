@@ -3,6 +3,79 @@
 
   var msalInstancePromise = null;
 
+  var PROFILE_CACHE_KEY = "9net.signature.profile.v1";
+
+  function sanitizeProfile(profile, config) {
+    profile = profile || {};
+    config = config || global.NineNetConfig;
+    var addressLines = Array.isArray(profile.addressLines)
+      ? profile.addressLines.map(clean).filter(Boolean)
+      : Array.prototype.slice.call(config.fallbackAddress || []);
+
+    return {
+      displayName: clean(profile.displayName) || "Colaborador 9Net",
+      jobTitle: clean(profile.jobTitle),
+      email: clean(profile.email),
+      businessPhone: clean(profile.businessPhone) || clean(config.fallbackPhone),
+      faxNumber: clean(profile.faxNumber),
+      mobilePhone: clean(profile.mobilePhone),
+      department: clean(profile.department),
+      officeLocation: clean(profile.officeLocation),
+      addressLines: addressLines
+    };
+  }
+
+  function getCachedProfile(config) {
+    config = config || global.NineNetConfig;
+    try {
+      var roamingSettings = Office.context && Office.context.roamingSettings;
+      if (!roamingSettings) {
+        return null;
+      }
+      var stored = roamingSettings.get(PROFILE_CACHE_KEY);
+      if (!stored) {
+        return null;
+      }
+      var parsed = typeof stored === "string" ? JSON.parse(stored) : stored;
+      var profile = parsed && parsed.profile ? parsed.profile : parsed;
+      if (!profile || !clean(profile.email)) {
+        return null;
+      }
+      return sanitizeProfile(profile, config);
+    } catch (error) {
+      console.warn("9Net: nao foi possivel ler o perfil salvo.", error);
+      return null;
+    }
+  }
+
+  function saveCachedProfile(profile, config) {
+    config = config || global.NineNetConfig;
+    return new Promise(function (resolve, reject) {
+      try {
+        var roamingSettings = Office.context && Office.context.roamingSettings;
+        if (!roamingSettings || typeof roamingSettings.saveAsync !== "function") {
+          reject(new Error("RoamingSettings nao esta disponivel neste cliente."));
+          return;
+        }
+        var payload = {
+          version: 1,
+          savedAt: new Date().toISOString(),
+          profile: sanitizeProfile(profile, config)
+        };
+        roamingSettings.set(PROFILE_CACHE_KEY, JSON.stringify(payload));
+        roamingSettings.saveAsync(function (result) {
+          if (result.status === Office.AsyncResultStatus.Succeeded) {
+            resolve(payload.profile);
+          } else {
+            reject(new Error(result.error && result.error.message ? result.error.message : "Falha ao salvar o perfil da assinatura."));
+          }
+        });
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
   function clean(value) {
     return value === null || value === undefined ? "" : String(value).trim();
   }
@@ -264,6 +337,9 @@
     clean: clean,
     escapeHtml: escapeHtml,
     normalizeGraphProfile: normalizeGraphProfile,
+    sanitizeProfile: sanitizeProfile,
+    getCachedProfile: getCachedProfile,
+    saveCachedProfile: saveCachedProfile,
     getOfficeFallbackProfile: getOfficeFallbackProfile,
     getGraphProfile: getGraphProfile,
     isPendingConfig: isPendingConfig,
