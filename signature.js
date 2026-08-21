@@ -263,9 +263,13 @@
       ? '<div class="theme-text-secondary" style="margin:2px 0 0 0;color:#555555!important;font-family:\'Segoe UI\',Arial,sans-serif;font-size:14px;line-height:18px;font-weight:600;mso-line-height-rule:exactly;">' + escapeHtml(jobTitle) + "</div>"
       : "";
 
-    var phoneCells = fax
-      ? '<td width="128" valign="middle" nowrap style="width:128px;padding:6px 0;background-color:#ffffff;font-family:\'Segoe UI\',Arial,sans-serif;font-size:14px;line-height:20px;mso-line-height-rule:exactly;white-space:nowrap;"><a class="theme-link" href="' + escapeHtml(toTelHref(phone)) + '" style="color:#222222!important;font-family:\'Segoe UI\',Arial,sans-serif;font-size:14px;line-height:20px;text-decoration:none;white-space:nowrap;">' + escapeHtml(phone) + '</a></td><td class="theme-text-primary" width="21" valign="middle" nowrap style="width:21px;padding:6px 0;background-color:#ffffff;color:#222222!important;font-family:\'Segoe UI\',Arial,sans-serif;font-size:14px;line-height:20px;mso-line-height-rule:exactly;white-space:nowrap;">|</td><td class="theme-text-primary" width="108" valign="middle" nowrap style="width:108px;padding:6px 0;background-color:#ffffff;color:#222222!important;font-family:\'Segoe UI\',Arial,sans-serif;font-size:14px;line-height:20px;mso-line-height-rule:exactly;white-space:nowrap;">Ramal ' + escapeHtml(fax) + "</td>"
-      : '<td colspan="3" width="257" valign="middle" nowrap style="width:257px;padding:6px 0;background-color:#ffffff;font-family:\'Segoe UI\',Arial,sans-serif;font-size:14px;line-height:20px;mso-line-height-rule:exactly;white-space:nowrap;"><a class="theme-link" href="' + escapeHtml(toTelHref(phone)) + '" style="color:#222222!important;font-family:\'Segoe UI\',Arial,sans-serif;font-size:14px;line-height:20px;text-decoration:none;white-space:nowrap;">' + escapeHtml(phone) + "</a></td>";
+    // Telefone e ramal ficam no mesmo TD para o Outlook nao espalhar o ramal
+    // para o fim da linha por causa das colunas fixas da tabela.
+    var ramalInline = fax
+      ? '<span class="theme-text-primary" style="color:#222222!important;font-family:\'Segoe UI\',Arial,sans-serif;font-size:14px;line-height:20px;white-space:nowrap;">&nbsp;|&nbsp;Ramal ' + escapeHtml(fax) + '</span>'
+      : '';
+
+    var phoneCells = '<td colspan="3" width="257" valign="middle" nowrap style="width:257px;padding:6px 0;background-color:#ffffff;font-family:\'Segoe UI\',Arial,sans-serif;font-size:14px;line-height:20px;mso-line-height-rule:exactly;white-space:nowrap;"><a class="theme-link" href="' + escapeHtml(toTelHref(phone)) + '" style="color:#222222!important;font-family:\'Segoe UI\',Arial,sans-serif;font-size:14px;line-height:20px;text-decoration:none;white-space:nowrap;">' + escapeHtml(phone) + '</a>' + ramalInline + '</td>';
 
     var phoneRow = phone
       ? '<tr><td width="52" valign="middle" style="width:52px;padding:6px 0;background-color:#ffffff;"><img class="theme-icon" src="' + assets + '/icon-phone.png" width="24" height="24" alt="Telefone" style="display:block;width:24px;height:24px;border:0;outline:none;background-color:#ffffff;"></td>' + phoneCells + "</tr>"
