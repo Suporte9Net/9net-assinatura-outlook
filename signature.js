@@ -3,14 +3,14 @@
 
   var msalInstancePromise = null;
 
-  var PROFILE_CACHE_KEY = "9net.signature.profile.v1";
+  var PROFILE_CACHE_KEY = "9net.signature.profile.v2";
 
   function sanitizeProfile(profile, config) {
     profile = profile || {};
     config = config || global.NineNetConfig;
-    var addressLines = Array.isArray(profile.addressLines)
-      ? profile.addressLines.map(clean).filter(Boolean)
-      : Array.prototype.slice.call(config.fallbackAddress || []);
+    // O endereco e corporativo e deve ser identico ao da assinatura classica/GPO.
+    // Nao reutiliza endereco salvo/antigo do Graph para evitar CEP, pais ou formatacao inconsistente.
+    var addressLines = Array.prototype.slice.call(config.fallbackAddress || []);
 
     return {
       displayName: clean(profile.displayName) || "Colaborador 9Net",
@@ -104,21 +104,12 @@
   }
 
   function buildAddressLines(raw, config) {
-    var street = clean(raw.streetAddress);
-    var cityState = joinCityState(raw.city, raw.state);
-    var postalCode = clean(raw.postalCode);
-    var country = clean(raw.country);
-    var hasGraphAddress = Boolean(street || cityState || postalCode || country);
+    config = config || global.NineNetConfig;
 
-    if (!hasGraphAddress) {
-      return Array.prototype.slice.call(config.fallbackAddress || []);
-    }
-
-    return [
-      street,
-      cityState,
-      [postalCode, country].filter(Boolean).join(" · ")
-    ].filter(Boolean);
+    // O endereco da 9Net e fixo na assinatura corporativa.
+    // Isso garante exatamente as mesmas 3 linhas do Outlook classico/GPO
+    // e impede CEP/pais ou dados mal formatados vindos do Microsoft Graph.
+    return Array.prototype.slice.call(config.fallbackAddress || []);
   }
 
   function normalizeGraphProfile(raw, fallback, config) {
@@ -257,6 +248,8 @@
     var jobTitle = clean(profile.jobTitle);
     var email = clean(profile.email);
     var phone = clean(profile.businessPhone) || clean(config.fallbackPhone);
+    // O campo fax do Microsoft 365 e usado como ramal.
+    // Se estiver vazio, nao exibe nem o separador "|" nem o texto "Ramal".
     var fax = clean(profile.faxNumber);
     var mobile = clean(profile.mobilePhone);
     var addressLines = Array.isArray(profile.addressLines) && profile.addressLines.length
@@ -269,9 +262,10 @@
       ? '<div class="theme-text-secondary" style="margin:1px 0 0 0;color:#555555!important;font-family:\'Segoe UI\',Arial,sans-serif;font-size:14px;line-height:18px;font-weight:700;">' + escapeHtml(jobTitle) + "</div>"
       : "";
 
-    var extensionBlock = fax
-      ? '<span class="theme-text-primary" style="color:#222222!important;font-family:\'Segoe UI\',Arial,sans-serif;font-size:14px;line-height:20px;mso-line-height-rule:exactly;white-space:nowrap;">&nbsp;&nbsp;|&nbsp;&nbsp;Ramal ' + escapeHtml(fax) + "</span>"
-      : "";
+    var extensionBlock = "";
+    if (fax.length > 0) {
+      extensionBlock = '<span class="theme-text-primary" style="color:#222222!important;font-family:\'Segoe UI\',Arial,sans-serif;font-size:14px;line-height:20px;mso-line-height-rule:exactly;white-space:nowrap;">&nbsp;&nbsp;|&nbsp;&nbsp;Ramal ' + escapeHtml(fax) + "</span>";
+    }
 
     var phoneRow = phone
       ? '<tr><td width="52" valign="middle" style="width:52px;padding:6px 0;"><img class="theme-icon" src="' + assets + '/icon-phone.png" width="24" height="24" alt="Telefone" style="display:block;width:24px;height:24px;border:0;outline:none;background-color:#ffffff;"></td><td colspan="3" width="257" valign="middle" nowrap style="width:257px;padding:6px 0;font-family:\'Segoe UI\',Arial,sans-serif;font-size:14px;line-height:20px;mso-line-height-rule:exactly;white-space:nowrap;"><a class="theme-link" href="' + escapeHtml(toTelHref(phone)) + '" style="color:#222222!important;font-family:\'Segoe UI\',Arial,sans-serif;font-size:14px;line-height:20px;text-decoration:none;white-space:nowrap;">' + escapeHtml(phone) + '</a>' + extensionBlock + '</td></tr>'
@@ -290,7 +284,7 @@
       '.theme-text-primary{color:#111111!important}.theme-link{color:#222222!important}.theme-text-secondary{color:#444444!important}.theme-text-muted{color:#666666!important}.theme-icon{background-color:#ffffff!important;filter:none!important}' +
       '@media only screen and (max-width:900px){.signature-shell{width:100%!important;max-width:660px!important}.banner-image{width:100%!important;height:auto!important}.contact-grid{width:100%!important}.stack-column{display:block!important;width:100%!important;max-width:100%!important}.address-cell{border-left:0!important;border-top:1px solid #dddddd!important;padding:16px 0 0 0!important}.contact-cell{padding:0 0 16px 0!important}}' +
       '</style>' +
-      '<div class="WordSection1" data-9net-signature="new-outlook-v2.0.3">' +
+      '<div class="WordSection1" data-9net-signature="new-outlook-v2.0.6">' +
       '<table role="presentation" class="signature-shell" width="660" cellpadding="0" cellspacing="0" border="0" style="width:660px;max-width:660px;background-color:#ffffff;font-family:\'Segoe UI\',Arial,sans-serif;">' +
       '<tr><td style="padding:0;background-color:#ffffff;"><a href="' + escapeHtml(config.websiteUrl) + '" target="_blank" style="text-decoration:none;border:0;"><img class="banner-image" src="' + assets + '/banner-9net.jpg" width="660" height="95" alt="9Net Tecnologia - Cuidamos do seu TI para que o foco e investimento da sua empresa estejam em seus negocios." style="display:block;width:660px;max-width:660px;height:95px;border:0;outline:none;text-decoration:none;"></a></td></tr>' +
       '<tr><td style="padding:23px 0 0 0;background-color:#ffffff;"><div class="theme-text-primary" style="margin:0;color:#111111!important;font-family:\'Segoe UI\',Arial,sans-serif;font-size:18px;line-height:22px;font-weight:700;mso-line-height-rule:exactly;">' + displayName + '</div>' + jobTitleBlock + '</td></tr>' +
