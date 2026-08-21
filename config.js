@@ -3,7 +3,7 @@
 
   window.NineNetConfig = Object.freeze({
     version: "2.0.2",
-    clientId: "eaaf2251-f42e-4705-861f-66dd100ca29b",
+    clientId: "b779ec24-ccd2-4a8a-a6b3-138f6faa6478",
     tenantId: "e66ee0b3-9cf5-40f5-bc5a-a46efc7a8063",
     baseUrl: "https://9net-assinatura-outlook.pages.dev",
     graphScopes: Object.freeze(["User.Read"]),
